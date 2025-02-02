@@ -91,7 +91,7 @@ class DXFEditorApp:
             last_line = self.drawn_lines.pop()
             self.canvas.delete(last_line)
 
-    def open_dxf(self):
+    def load_dxf(self):
         file_path = filedialog.askopenfilename(filetypes=[("DXF files", "*.dxf")])
         if file_path:
             doc = ezdxf.readfile(file_path)
