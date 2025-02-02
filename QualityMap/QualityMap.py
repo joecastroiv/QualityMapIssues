@@ -113,28 +113,21 @@ class DXFEditorApp:
             self.draw_dxf_content(msp, scale, offset_x, offset_y)
 
     def calculate_bounding_box(self, msp):
-        min_x, min_y, max_x, max_y = None, None, None, None
+        x_coords = []
+        y_coords = []
         for entity in msp:
             if entity.dxftype() == 'LINE':
-                x_coords = [entity.dxf.start.x, entity.dxf.end.x]
-                y_coords = [entity.dxf.start.y, entity.dxf.end.y]
+                x_coords.extend([entity.dxf.start.x, entity.dxf.end.x])
+                y_coords.extend([entity.dxf.start.y, entity.dxf.end.y])
             elif entity.dxftype() == 'CIRCLE':
-                x_coords = [entity.dxf.center.x - entity.dxf.radius, entity.dxf.center.x + entity.dxf.radius]
-                y_coords = [entity.dxf.center.y - entity.dxf.radius, entity.dxf.center.y + entity.dxf.radius]
+                x_coords.extend([entity.dxf.center.x - entity.dxf.radius, entity.dxf.center.x + entity.dxf.radius])
+                y_coords.extend([entity.dxf.center.y - entity.dxf.radius, entity.dxf.center.y + entity.dxf.radius])
             elif entity.dxftype() == 'ARC':
                 arc_points = self.get_arc_points(entity)
-                x_coords = [p[0] for p in arc_points]
-                y_coords = [p[1] for p in arc_points]
-            else:
-                continue
+                x_coords.extend([p[0] for p in arc_points])
+                y_coords.extend([p[1] for p in arc_points])
 
-            if min_x is None:
-                min_x, max_x = min(x_coords), max(x_coords)
-                min_y, max_y = min(y_coords), max(y_coords)
-            else:
-                min_x, max_x = min(min_x, min(x_coords)), max(max_x, max(x_coords))
-                min_y, max_y = min(min_y, min(y_coords)), max(max_y, max(y_coords))
-        return min_x, min_y, max_x, max_y
+        return min(x_coords), min(y_coords), max(x_coords), max(y_coords)
 
     def draw_dxf_content(self, msp, scale, offset_x, offset_y):
         for entity in msp:
