@@ -27,20 +27,17 @@ class DXFEditorApp:
         self.bottom_frame = tk.Frame(self.root)
         self.bottom_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
-        self.load_dxf_button = tk.Button(self.right_frame, text="Load DXF", command=self.open_dxf)
-        self.load_dxf_button.pack(pady=10)
-
-        self.scratch_button = tk.Button(self.right_frame, text="Scratch", command=self.start_scratch)
-        self.scratch_button.pack(pady=10)
-
-        self.contamination_button = tk.Button(self.right_frame, text="Contamination", command=self.start_contamination)
-        self.contamination_button.pack(pady=10)
-
-        self.other_button = tk.Button(self.right_frame, text="Other", command=self.start_other)
-        self.other_button.pack(pady=10)
-
-        self.undo_button = tk.Button(self.right_frame, text="Undo", command=self.undo)
-        self.undo_button.pack(pady=10)
+    def create_buttons(self):
+        buttons = [
+            ("Load DXF", self.open_dxf),
+            ("Scratch", lambda: self.start_drawing("scratch")),
+            ("Contamination", lambda: self.start_drawing("contamination")),
+            ("Other", lambda: self.start_drawing("other")),
+            ("Undo", self.undo)
+        ]
+        for text, command in buttons:
+            button = tk.Button(self.right_frame, text=text, command=command)
+            button.pack(pady=10)
 
         self.data_listbox = tk.Listbox(self.bottom_frame)
         self.data_listbox.pack(fill=tk.BOTH, expand=True)
