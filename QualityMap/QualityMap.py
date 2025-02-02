@@ -27,9 +27,17 @@ class DXFEditorApp:
         self.bottom_frame = tk.Frame(self.root)
         self.bottom_frame.pack(side=tk.BOTTOM, fill=tk.X)
 
+        self.create_buttons()
+
+        self.data_listbox = tk.Listbox(self.bottom_frame)
+        self.data_listbox.pack(fill=tk.BOTH, expand=True)
+
+        self.canvas.bind("<Button-1>", self.on_canvas_click)
+        self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
+
     def create_buttons(self):
         buttons = [
-            ("Load DXF", self.open_dxf),
+            ("Load DXF", self.load_dxf),
             ("Scratch", lambda: self.start_drawing("scratch")),
             ("Contamination", lambda: self.start_drawing("contamination")),
             ("Other", lambda: self.start_drawing("other")),
@@ -38,12 +46,6 @@ class DXFEditorApp:
         for text, command in buttons:
             button = tk.Button(self.right_frame, text=text, command=command)
             button.pack(pady=10)
-
-        self.data_listbox = tk.Listbox(self.bottom_frame)
-        self.data_listbox.pack(fill=tk.BOTH, expand=True)
-
-        self.canvas.bind("<Button-1>", self.on_canvas_click)
-        self.canvas.bind("<B1-Motion>", self.on_canvas_drag)
 
     def start_scratch(self):
         self.drawing_mode = "scratch"
